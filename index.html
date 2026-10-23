@@ -697,6 +697,7 @@ setInterval(() => {
 
     const note = melody[noteIndex];
     playNote(note[0], note[1]);
+    playNote(melody[(noteIndex + 4) % melody.length][0] / 2, 0.12);
 
     noteIndex = (noteIndex + 1) % melody.length;
     timer = setTimeout(playNextNote, 420);
