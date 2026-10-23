@@ -316,6 +316,39 @@ body {
   padding: 0;
   margin: 0 auto;
 }
+  /* スマホ1画面向けコンパクト調整 */
+@media (max-width: 600px) {
+  body {
+    padding: 8px !important;
+  }
+
+  h1 {
+    font-size: 1.4rem !important;
+  }
+
+  #girl-image {
+    max-height: 15vh !important;
+    width: auto;
+  }
+
+  .character {
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+  }
+
+  section,
+  .panel,
+  .card {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    padding: 8px !important;
+  }
+
+  button {
+    min-height: 0;
+  }
+}
 </style>
 </head>
 <body>
