@@ -675,7 +675,7 @@ setInterval(() => {
     const oscillator = audioContext.createOscillator();
     const volume = audioContext.createGain();
 
-    oscillator.type = "sine";
+    oscillator.type = "square";
     oscillator.frequency.setValueAtTime(frequency, now);
 
     volume.gain.setValueAtTime(0.0001, now);
