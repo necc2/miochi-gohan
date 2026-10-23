@@ -399,24 +399,20 @@ function updateMeter() {
 }
 
 function setFace(type) {
-  const eyes = document.getElementById("eyes");
-  const mouth = document.getElementById("mouth");
-  const sceneLabel = document.getElementById("scene-label");
-  const speech = document.getElementById("speech");
-
-  const faces = {
-    normal:["◕ ◕","ᴗ"],
-    happy:["^ ^","ω"],
-    surprised:["O O","o"],
-    grumpy:["¬ ¬","へ"],
-    sad:["T T","﹏"],
-    shy:["◕ ◕","ᴗ"]
+  const images = {
+    normal: "normal.png",
+    happy: "happy.png",
+    surprised: "surprised.png",
+    annoyed: "annoyed.png",
+    crying: "crying.png",
+    shy: "shy.png"
   };
-  const f = faces[type] || faces.normal;
-  eyes.textContent = f[0];
-  mouth.textContent = f[1];
-  document.getElementById("character").style.transform =
-    type === "happy" ? "translateY(-4px)" : "translateY(0)";
+
+  const image = document.getElementById("girl-image");
+
+  if (image) {
+    image.src = images[type] || images.normal;
+  }
 }
 
 function setMessage(title, message, face="normal") {
