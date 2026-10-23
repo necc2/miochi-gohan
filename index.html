@@ -1,1 +1,541 @@
 
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#dcd0ff">
+<title>うさちゃんのごはん日和</title>
+<style>
+:root {
+  --lavender: #dcd0ff;
+  --light: #fff8ff;
+  --purple: #34266f;
+  --pink: #f28dbd;
+  --border: #7663d9;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 12px 9px 24px;
+  background-color: #c9bcf4;
+  background-image:
+    radial-gradient(#ffffff70 1px, transparent 1px);
+  background-size: 8px 8px;
+  color: var(--purple);
+  font-family: monospace, sans-serif;
+  image-rendering: pixelated;
+}
+button { font: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid #ff65b5; }
+.game {
+  max-width: 510px;
+  margin: auto;
+  padding: 8px;
+  background: #f6efff;
+  border: 4px ridge #9584e8;
+  box-shadow: 0 5px 0 #7563bd;
+}
+.title {
+  text-align: center;
+  padding: 15px 5px;
+  color: white;
+  background: var(--purple);
+  border: 4px ridge #b9aaff;
+  font-size: clamp(17px, 5vw, 23px);
+  font-weight: bold;
+  text-shadow: 2px 2px #8c7ad5;
+}
+.title small {
+  display: block;
+  font-size: 11px;
+  margin-top: 6px;
+  color: #f9d9f1;
+}
+.panel {
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--light);
+  border: 4px ridge #a99ae8;
+  box-shadow: inset 0 0 0 2px #e2d8ff;
+}
+.scene {
+  min-height: 300px;
+  text-align: center;
+  background:
+    linear-gradient(180deg, #aeb7f5 0%, #d8c9fa 62%, #f5dcfa 100%);
+  border: 4px ridge #8c7cdd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+}
+.scene-label {
+  width: 100%;
+  background: #fdf7ff;
+  border: 3px ridge #9a89df;
+  padding: 8px;
+  font-size: 13px;
+}
+.character {
+  width: 150px;
+  height: 175px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+  filter: drop-shadow(3px 4px 0 #8274c4);
+}
+.ears {
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -10px;
+  transform: translateX(-5px);
+}
+.face {
+  width: 105px;
+  height: 100px;
+  background: #ffdfc7;
+  border: 4px solid #45316e;
+  border-radius: 42% 42% 45% 45%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset -6px -4px #f6b9bf;
+}
+.hair {
+  position: absolute;
+  top: -7px;
+  left: 3px;
+  right: 3px;
+  height: 30px;
+  background: #ffe1a5;
+  border-bottom: 4px solid #45316e;
+  border-radius: 45% 45% 15% 15%;
+}
+.eyes {
+  z-index: 1;
+  margin-top: 18px;
+  font-size: 21px;
+  letter-spacing: 8px;
+  transform: translateX(4px);
+}
+.mouth { z-index: 1; font-size: 19px; line-height: 1.1; }
+.blush {
+  z-index: 1;
+  position: absolute;
+  top: 57px;
+  color: #f28dbd;
+  font-size: 14px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.body-dress {
+  width: 105px;
+  height: 48px;
+  margin-top: -3px;
+  background: #fffaff;
+  border: 4px solid #45316e;
+  border-radius: 30% 30% 15% 15%;
+  position: relative;
+}
+.body-dress:after {
+  content: "🎀";
+  position: absolute;
+  top: 3px;
+  left: 33px;
+  font-size: 20px;
+}
+.speech {
+  width: 100%;
+  padding: 10px;
+  background: #fffaff;
+  border: 4px ridge #9484df;
+  font-weight: bold;
+  min-height: 49px;
+  font-size: 14px;
+}
+h2 {
+  margin: 5px 0 12px;
+  text-align: center;
+  font-size: 17px;
+}
+.statline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 8px 0;
+}
+.track {
+  height: 17px;
+  border: 3px ridge #8d7dd0;
+  background: #d9d1f5;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.fill {
+  width: 50%;
+  height: 100%;
+  background: #e98cba;
+  transition: width .3s;
+  border-right: 2px solid #fff0ff;
+}
+.meter-note { font-size: 11px; text-align: center; }
+.smallstats {
+  border-top: 2px solid #d8cdf5;
+  margin-top: 8px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+.food {
+  min-width: 0;
+  padding: 5px 3px 8px;
+  color: var(--purple);
+  background: #fffaff;
+  border: 4px ridge #a496e9;
+  box-shadow: 0 3px #bdb0ec;
+}
+.food:active { transform: translateY(2px); box-shadow: none; }
+.food:disabled { opacity: .5; }
+.food-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  font-size: clamp(32px, 10vw, 49px);
+  background: #e8e0ff;
+  border: 2px solid #c4b7f0;
+  margin-bottom: 7px;
+}
+.food-name { font-size: 12px; font-weight: bold; overflow-wrap: anywhere; }
+.subtext { text-align: center; font-size: 11px; margin: 9px 0 2px; }
+.menu {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 10px;
+}
+.menu button {
+  color: white;
+  background: var(--purple);
+  border: 4px ridge #b6a6ff;
+  padding: 12px 2px;
+  font-size: 12px;
+}
+.menu button:active { background: #6552b7; }
+#book-area { display: none; }
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+.book-entry {
+  padding: 9px 2px;
+  text-align: center;
+  background: #f1eaff;
+  border: 2px ridge #b1a1e8;
+  font-size: 12px;
+}
+.book-entry .book-icon { font-size: 26px; display: block; margin-bottom: 5px; }
+.book-entry.unknown { color: #9689bd; }
+.action {
+  width: 100%;
+  margin-top: 9px;
+  padding: 10px;
+  background: #e7ddff;
+  color: var(--purple);
+  border: 3px ridge #a99ae8;
+}
+footer { text-align: center; font-size: 10px; padding: 10px 0 2px; }
+@media (min-width: 420px) {
+  .scene { min-height: 350px; }
+  .character { transform: scale(1.08); margin: 12px 0; }
+  .food-name { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+<main class="game">
+  <header class="title">
+    ♡ うさちゃんのごはん日和 ♡
+    <small>★ 16BIT PIXEL ADVENTURE ★</small>
+  </header>
+
+  <section class="panel scene" id="scene">
+    <div class="scene-label" id="scene-label">「おなかすいたなぁ……」</div>
+    <div class="character" id="character" aria-label="うさ耳の女の子">
+      <div class="ears">🐰</div>
+      <div class="face">
+        <div class="hair"></div>
+        <div class="eyes" id="eyes">◕ ◕</div>
+        <div class="blush"><span>〃</span><span>〃</span></div>
+        <div class="mouth" id="mouth">ᴗ</div>
+      </div>
+      <div class="body-dress"></div>
+    </div>
+    <div class="speech" id="speech">「なにか食べたいな……」</div>
+  </section>
+
+  <section class="panel">
+    <h2>♡ おなかメーター ♡</h2>
+    <div class="statline">
+      <span>🍴 おなかの満たされ度</span>
+      <span id="meter-number">25 / 100</span>
+    </div>
+    <div class="track" role="progressbar" aria-label="おなかの満たされ度"
+      aria-valuemin="0" aria-valuemax="100" aria-valuenow="25" id="meter-track">
+      <div class="fill" id="meter-fill"></div>
+    </div>
+    <div class="meter-note" id="meter-note">まだおなかがすいているみたい。</div>
+    <div class="smallstats">
+      <span>♥ 好感度：<b id="affection">12</b></span>
+      <span>▤ 図鑑：<b id="book-count">0 / 12</b></span>
+    </div>
+  </section>
+
+  <section class="panel" id="feed-area">
+    <h2>▼ なにを食べさせる？ ▼</h2>
+    <div class="food-grid" id="food-grid"></div>
+    <p class="subtext">好きなものを見つけてあげよう！</p>
+  </section>
+
+  <section class="panel" id="book-area">
+    <h2>▤ 食べ物図鑑</h2>
+    <p class="subtext" id="book-description">食べたものが記録されるよ！</p>
+    <div class="book-grid" id="book-grid"></div>
+    <button class="action" onclick="showScreen('feed')">◀ ごはんに戻る</button>
+  </section>
+
+  <nav class="menu">
+    <button onclick="showScreen('feed')">◀ ごはん</button>
+    <button onclick="showScreen('book')">▤ 図鑑</button>
+    <button onclick="resetGame()">↻ リセット</button>
+  </nav>
+  <footer>♡ うさちゃんを大切にお世話してね ♡</footer>
+</main>
+
+<script>
+const foods = [
+  {name:"ごはん",icon:"🍚",gain:24,like:true},
+  {name:"お肉",icon:"🥩",gain:30,like:true},
+  {name:"ケーキ",icon:"🍰",gain:18,like:true},
+  {name:"にんじん",icon:"🥕",gain:14,like:false},
+  {name:"いちご",icon:"🍓",gain:16,like:true},
+  {name:"パン",icon:"🍞",gain:18,like:true},
+  {name:"おさかな",icon:"🐟",gain:22,like:false},
+  {name:"プリン",icon:"🍮",gain:17,like:true},
+  {name:"ブロッコリー",icon:"🥦",gain:12,like:false},
+  {name:"おにぎり",icon:"🍙",gain:20,like:true},
+  {name:"クッキー",icon:"🍪",gain:13,like:true},
+  {name:"ピーマン",icon:"🫑",gain:10,like:false}
+];
+
+const defaultState = {
+  meter:25,
+  affection:12,
+  seen:[],
+  lastTime:Date.now()
+};
+let state;
+let choices = [];
+let feeding = false;
+
+try {
+  state = {...defaultState, ...JSON.parse(localStorage.getItem("usachanSave") || "{}")};
+  if (!Array.isArray(state.seen)) state.seen = [];
+} catch(e) {
+  state = {...defaultState, seen:[]};
+}
+
+function save() {
+  state.lastTime = Date.now();
+  try { localStorage.setItem("usachanSave", JSON.stringify(state)); } catch(e) {}
+}
+
+function updateMeter() {
+  state.meter = Math.max(0, Math.min(100, state.meter));
+  document.getElementById("meter-number").textContent = state.meter + " / 100";
+  document.getElementById("meter-fill").style.width = state.meter + "%";
+  document.getElementById("meter-track").setAttribute("aria-valuenow", state.meter);
+  document.getElementById("affection").textContent = state.affection;
+  document.getElementById("book-count").textContent = state.seen.length + " / " + foods.length;
+
+  let note = "ちょうどいい感じ！";
+  if (state.meter < 21) note = "おなかペコペコ……ごはんをあげてね。";
+  else if (state.meter < 46) note = "まだおなかがすいているみたい。";
+  else if (state.meter < 76) note = "おなかいっぱい！ごきげんだよ。";
+  else if (state.meter < 100) note = "もうすぐ満腹になりそう！";
+  else note = "おなかいっぱい！少し休ませてね。";
+  document.getElementById("meter-note").textContent = note;
+}
+
+function setFace(type) {
+  const eyes = document.getElementById("eyes");
+  const mouth = document.getElementById("mouth");
+  const sceneLabel = document.getElementById("scene-label");
+  const speech = document.getElementById("speech");
+
+  const faces = {
+    normal:["◕ ◕","ᴗ"],
+    happy:["^ ^","ω"],
+    surprised:["O O","o"],
+    grumpy:["¬ ¬","へ"],
+    sad:["T T","﹏"],
+    shy:["◕ ◕","ᴗ"]
+  };
+  const f = faces[type] || faces.normal;
+  eyes.textContent = f[0];
+  mouth.textContent = f[1];
+  document.getElementById("character").style.transform =
+    type === "happy" ? "translateY(-4px)" : "translateY(0)";
+}
+
+function setMessage(title, message, face="normal") {
+  document.getElementById("scene-label").textContent = title;
+  document.getElementById("speech").textContent = message;
+  setFace(face);
+}
+
+function shuffleChoices() {
+  const pool = [...foods];
+  choices = [];
+  while (choices.length < 3 && pool.length) {
+    const index = Math.floor(Math.random() * pool.length);
+    choices.push(pool.splice(index, 1)[0]);
+  }
+  renderChoices();
+}
+
+function renderChoices() {
+  document.getElementById("food-grid").innerHTML = choices.map((food, index) =>
+    `<button class="food" onclick="feed(${index})" ${feeding || state.meter >= 100 ? "disabled" : ""}>
+      <span class="food-icon">${food.icon}</span>
+      <span class="food-name">${food.name}</span>
+    </button>`
+  ).join("");
+}
+
+function feed(index) {
+  if (feeding || state.meter >= 100) {
+    if (state.meter >= 100) {
+      setMessage("「もうたべられないよ〜」", "ちょっと休憩させてね。", "grumpy");
+    }
+    return;
+  }
+
+  const food = choices[index];
+  if (!food) return;
+  feeding = true;
+
+  const firstTime = !state.seen.includes(food.name);
+  if (firstTime) state.seen.push(food.name);
+
+  const before = state.meter;
+  state.meter = Math.min(100, state.meter + food.gain);
+
+  if (food.like) {
+    state.affection += 2;
+    if (firstTime) state.affection += 1;
+    setMessage("「これ、だいすき！」", food.name + "をもぐもぐ！うれしそう！", "happy");
+  } else {
+    state.affection = Math.max(0, state.affection - 1);
+    setMessage("「うーん……」", food.name + "はちょっと苦手みたい……", "grumpy");
+  }
+
+  if (before < 21 && state.meter >= 21 && food.like) {
+    document.getElementById("speech").textContent = "おなかが満たされてきたよ！ありがとう♡";
+  }
+  if (state.meter >= 100) {
+    document.getElementById("scene-label").textContent = "「もうおなかいっぱい！」";
+    document.getElementById("speech").textContent = "ごちそうさま！少し休憩しよう。";
+    setFace("happy");
+  }
+
+  save();
+  updateMeter();
+  renderBook();
+
+  document.querySelectorAll(".food").forEach(button => button.disabled = true);
+  setTimeout(() => {
+    feeding = false;
+    shuffleChoices();
+  }, 900);
+}
+
+function renderBook() {
+  document.getElementById("book-description").textContent =
+    "発見した食べ物：" + state.seen.length + " / " + foods.length;
+  document.getElementById("book-grid").innerHTML = foods.map(food => {
+    const found = state.seen.includes(food.name);
+    return `<div class="book-entry ${found ? "" : "unknown"}">
+      <span class="book-icon">${found ? food.icon : "❔"}</span>
+      ${found ? food.name : "？？？"}
+    </div>`;
+  }).join("");
+}
+
+function showScreen(screen) {
+  const book = screen === "book";
+  document.getElementById("book-area").style.display = book ? "block" : "none";
+  document.getElementById("feed-area").style.display = book ? "none" : "block";
+  if (book) renderBook();
+}
+
+function resetGame() {
+  if (!confirm("好感度と図鑑の記録を消して最初から遊びますか？")) return;
+  state = {...defaultState, seen:[], lastTime:Date.now()};
+  save();
+  feeding = false;
+  setMessage("「おなかすいたなぁ……」", "なにか食べたいな……", "normal");
+  updateMeter();
+  showScreen("feed");
+  shuffleChoices();
+}
+
+function recoverMeter() {
+  // 時間経過で少しずつおなかがすく（オフライン中も最大12時間分）
+  const now = Date.now();
+  const elapsed = Math.max(0, Math.min(12 * 60 * 60 * 1000, now - (state.lastTime || now)));
+  const loss = Math.floor(elapsed / (5 * 60 * 1000));
+  if (loss > 0) {
+    state.meter = Math.max(0, state.meter - loss);
+    state.lastTime = now;
+    save();
+  }
+}
+
+recoverMeter();
+updateMeter();
+renderBook();
+shuffleChoices();
+showScreen("feed");
+
+setInterval(() => {
+  if (state.meter > 0) {
+    state.meter = Math.max(0, state.meter - 1);
+    updateMeter();
+    save();
+  }
+}, 5 * 60 * 1000);
+</script>
+</body>
+</html>
+
