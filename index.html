@@ -270,6 +270,24 @@ footer { text-align: center; font-size: 10px; padding: 10px 0 2px; }
   .character { transform: scale(1.08); margin: 12px 0; }
   .food-name { font-size: 14px; }
 }
+  /* 16bitキャラクター画像 */
+#girl-image {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  max-height: 260px;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  margin: 0 auto;
+}
+
+.character {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -282,15 +300,8 @@ footer { text-align: center; font-size: 10px; padding: 10px 0 2px; }
   <section class="panel scene" id="scene">
     <div class="scene-label" id="scene-label">「おなかすいたなぁ……」</div>
     <div class="character" id="character" aria-label="うさ耳の女の子">
-      <div class="ears">🐰</div>
-      <div class="face">
-        <div class="hair"></div>
-        <div class="eyes" id="eyes">◕ ◕</div>
-        <div class="blush"><span>〃</span><span>〃</span></div>
-        <div class="mouth" id="mouth">ᴗ</div>
-      </div>
-      <div class="body-dress"></div>
-    </div>
+  <img id="girl-image" src="normal.png" alt="うさ耳の女の子">
+</div>
     <div class="speech" id="speech">「なにか食べたいな……」</div>
   </section>
 
