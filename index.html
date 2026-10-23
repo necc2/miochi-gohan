@@ -288,6 +288,34 @@ footer { text-align: center; font-size: 10px; padding: 10px 0 2px; }
   align-items: center;
   overflow: hidden;
 }
+  /* iPhoneで1画面に収める調整 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#girl-image {
+  max-height: 22vh;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.character {
+  min-height: 0;
+  padding: 0;
+  margin: 0 auto;
+}
 </style>
 </head>
 <body>
