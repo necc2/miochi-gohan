@@ -614,6 +614,111 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 </script>
+  
+<script>
+(() => {
+  const button = document.getElementById("bgm-toggle");
+  if (!button) return;
+
+  let audioContext = null;
+  let timer = null;
+  let noteIndex = 0;
+  let playing = false;
+
+  const melody = [
+    [523.25, 0.30],
+    [659.25, 0.30],
+    [783.99, 0.45],
+    [659.25, 0.30],
+    [587.33, 0.30],
+    [659.25, 0.45],
+    [523.25, 0.30],
+    [392.00, 0.45]
+  ];
+
+  function playNote(frequency, duration) {
+    if (!audioContext || audioContext.state !== "running") return;
+
+    const now = audioContext.currentTime;
+    const oscillator = audioContext.createOscillator();
+    const volume = audioContext.createGain();
+
+    oscillator.type = "triangle";
+    oscillator.frequency.setValueAtTime(frequency, now);
+
+    volume.gain.setValueAtTime(0.0001, now);
+    volume.gain.exponentialRampToValueAtTime(0.045, now + 0.04);
+    volume.gain.exponentialRampToValueAtTime(
+      0.0001,
+      now + duration
+    );
+
+    oscillator.connect(volume);
+    volume.connect(audioContext.destination);
+
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.02);
+  }
+
+  function playNextNote() {
+    if (!playing) return;
+
+    const note = melody[noteIndex];
+    playNote(note[0], note[1]);
+
+    noteIndex = (noteIndex + 1) % melody.length;
+    timer = setTimeout(playNextNote, 420);
+  }
+
+  async function startMusic() {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+      button.textContent = "♫ この端末では再生できません";
+      return;
+    }
+
+    if (!audioContext) {
+      audioContext = new AudioContextClass();
+    }
+
+    await audioContext.resume();
+
+    playing = true;
+    noteIndex = 0;
+    button.textContent = "♫ BGM ON";
+    button.setAttribute("aria-pressed", "true");
+
+    playNextNote();
+  }
+
+  function stopMusic() {
+    playing = false;
+    clearTimeout(timer);
+
+    if (audioContext && audioContext.state === "running") {
+      audioContext.suspend();
+    }
+
+    button.textContent = "♫ BGM OFF";
+    button.setAttribute("aria-pressed", "false");
+  }
+
+  button.addEventListener("click", async () => {
+    if (playing) {
+      stopMusic();
+    } else {
+      try {
+        await startMusic();
+      } catch (error) {
+        stopMusic();
+        button.textContent = "♫ 再生できませんでした";
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>
 
