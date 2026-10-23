@@ -642,117 +642,144 @@ setInterval(() => {
 }, 5 * 60 * 1000);
 </script>
   
+
 <script>
 (() => {
   const button = document.getElementById("bgm-toggle");
   if (!button) return;
 
   let audioContext = null;
+  let masterGain = null;
   let timer = null;
   let playing = false;
   let step = 0;
-  let nextTime = 0;
 
-  // Cメジャーを中心にした、明るく素朴な生活ゲーム風メロディー
-  // 音の高さはMIDI番号。0は休符
-  const melody = [
-    72, 76, 79, 76, 74, 76, 79, 0,
-    72, 76, 81, 79, 76, 74, 72, 0,
-    67, 72, 76, 72, 69, 72, 76, 0,
-    74, 76, 79, 83, 81, 79, 76, 0,
+  // ゆったりした生活ゲーム風のテンポ
+  const BPM = 96;
+  const BEAT = 60 / BPM;
+  const STEP = BEAT / 2;
+  const TOTAL_STEPS = 144; // 約45秒
 
-    72, 76, 79, 84, 83, 79, 76, 0,
-    74, 77, 81, 77, 76, 74, 72, 0,
-    67, 72, 76, 79, 76, 72, 69, 0,
-    74, 76, 79, 76, 74, 72, 72, 0
-  ];
-
-  // コードごとの低音と和音
-  const chords = [
-    [48, 55, 60, 64], // C
-    [45, 52, 57, 60], // Am
-    [41, 48, 53, 57], // F
-    [43, 50, 55, 59], // G
-    [48, 55, 60, 64], // C
-    [45, 52, 57, 60], // Am
-    [41, 48, 53, 57], // F
-    [43, 50, 55, 59]  // G
-  ];
-
-  const bpm = 104;
-  const beat = 60 / bpm;
-  const melodyStep = beat / 2;
-  const totalSteps = melody.length;
-
-  function midiToHz(midi) {
+  // 音名をMIDI番号から周波数へ変換
+  function hz(midi) {
     return 440 * Math.pow(2, (midi - 69) / 12);
   }
 
-  function tone(frequency, start, duration, volume, type = "square") {
-    if (!audioContext) return;
+  // 0は休符。8音で1小節
+  // Cメジャーを中心に、明るくやさしいメロディー
+  const phrases = [
+    [72, 76, 79, 76, 74, 76, 79, 0],
+    [72, 76, 81, 79, 76, 74, 72, 0],
+    [71, 74, 79, 74, 71, 74, 79, 0],
+    [69, 72, 76, 72, 69, 72, 76, 0],
+    [72, 76, 79, 81, 79, 76, 74, 0],
+    [71, 74, 79, 83, 79, 74, 71, 0],
 
+    [76, 79, 84, 81, 79, 76, 74, 0],
+    [72, 76, 81, 84, 81, 76, 72, 0],
+    [74, 77, 81, 77, 74, 77, 81, 0],
+    [71, 74, 79, 83, 79, 74, 71, 0],
+    [72, 76, 79, 84, 79, 76, 74, 0],
+    [71, 74, 79, 81, 79, 74, 71, 0],
+
+    [72, 76, 79, 76, 72, 76, 79, 0],
+    [69, 72, 76, 79, 76, 72, 69, 0],
+    [71, 74, 79, 74, 71, 74, 79, 0],
+    [69, 72, 76, 81, 76, 72, 69, 0],
+    [71, 74, 79, 76, 74, 71, 72, 0],
+    [72, 76, 79, 76, 74, 72, 72, 0]
+  ];
+
+  // 各小節のコード。メロディーと調和する伴奏
+  const chords = [
+    [48, 52, 55], // C
+    [43, 47, 50], // G
+    [45, 48, 52], // Am
+    [41, 45, 48], // F
+    [48, 52, 55], // C
+    [43, 47, 50], // G
+    [41, 45, 48], // F
+    [43, 47, 50], // G
+    [48, 52, 55], // C
+    [45, 48, 52], // Am
+    [41, 45, 48], // F
+    [43, 47, 50], // G
+    [48, 52, 55], // C
+    [41, 45, 48], // F
+    [43, 47, 50], // G
+    [45, 48, 52], // Am
+    [43, 47, 50], // G
+    [48, 52, 55]  // C
+  ];
+
+  const melody = phrases.flat();
+
+  // 音の始まりと終わりを滑らかにする
+  function tone(midi, duration, type, volume, offset = 0) {
+    if (!audioContext || !masterGain) return;
+
+    const now = audioContext.currentTime + offset;
     const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+    const envelope = audioContext.createGain();
 
     oscillator.type = type;
-    oscillator.frequency.setValueAtTime(frequency, start);
+    oscillator.frequency.setValueAtTime(hz(midi), now);
 
-    gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(
-      volume,
-      start + 0.015
+    const attack = 0.025;
+    const release = Math.min(0.09, duration * 0.3);
+    const end = now + duration;
+
+    envelope.gain.setValueAtTime(0.0001, now);
+    envelope.gain.linearRampToValueAtTime(
+      volume, now + attack
     );
-    gain.gain.setValueAtTime(
-      volume,
-      start + Math.max(0.02, duration * 0.55)
+    envelope.gain.setValueAtTime(
+      volume, Math.max(now + attack, end - release)
     );
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      start + duration
+    envelope.gain.exponentialRampToValueAtTime(
+      0.0001, end + 0.015
     );
 
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
+    oscillator.connect(envelope);
+    envelope.connect(masterGain);
 
-    oscillator.start(start);
-    oscillator.stop(start + duration + 0.02);
+    oscillator.start(now);
+    oscillator.stop(end + 0.02);
   }
 
   function playStep() {
     if (!playing || !audioContext) return;
 
-    const now = audioContext.currentTime;
-    const position = step % totalSteps;
-    const chord = chords[Math.floor(position / 8) % chords.length];
-    const note = melody[position];
+    const bar = Math.floor(step / 8);
+    const beatInBar = step % 8;
+    const note = melody[step];
 
-    // メインメロディー
-    if (note !== 0) {
-      tone(midiToHz(note), nextTime, melodyStep * 0.82, 0.035);
+    // メロディー：柔らかい矩形波
+    if (note > 0) {
+      tone(note, STEP * 0.94, "triangle", 0.19);
     }
 
-    // やわらかな低音：2拍ごとに鳴らす
-    if (position % 4 === 0) {
-      tone(midiToHz(chord[0]), nextTime, beat * 1.4, 0.045, "triangle");
+    // ベース：小節の頭と中盤でコードの根音を鳴らす
+    if (beatInBar === 0 || beatInBar === 4) {
+      const root = chords[bar][0] - 12;
+      tone(root, STEP * 1.65, "triangle", 0.15);
     }
 
-    // 小さな和音：控えめな伴奏
-    if (position % 4 === 2) {
-      tone(midiToHz(chord[1] + 12), nextTime, beat * 0.7, 0.012, "triangle");
-      tone(midiToHz(chord[2] + 12), nextTime, beat * 0.7, 0.010, "triangle");
+    // 伴奏：コードを短く鳴らして、音楽に厚みを加える
+    if (beatInBar === 0 || beatInBar === 4) {
+      const chord = chords[bar];
+      chord.forEach((midi, i) => {
+        tone(midi, STEP * 1.5, "triangle", 0.045, 0.015 * i);
+      });
     }
 
-    // フレーズの終わりに、きらっとした高音
-    if (position % 8 === 7) {
-      tone(midiToHz(chord[2] + 24), nextTime, beat * 0.45, 0.012, "sine");
+    // 小節の終わりに控えめなキラキラ音
+    if (beatInBar === 6 && bar % 2 === 1) {
+      tone(84, STEP * 0.8, "sine", 0.07, 0.03);
     }
 
-    step++;
-    nextTime += melodyStep;
-
-    // 次の音を少し先に予約して、リズムを安定させる
-    const delay = Math.max(20, (nextTime - audioContext.currentTime - 0.08) * 1000);
-    timer = setTimeout(playStep, delay);
+    step = (step + 1) % TOTAL_STEPS;
+    timer = setTimeout(playStep, STEP * 1000);
   }
 
   async function startMusic() {
@@ -760,19 +787,23 @@ setInterval(() => {
       window.AudioContext || window.webkitAudioContext;
 
     if (!AudioContextClass) {
-      button.textContent = "♫ 再生できません";
+      button.textContent = "♫ この端末では再生できません";
       return;
     }
 
     if (!audioContext) {
       audioContext = new AudioContextClass();
+
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = 0.65;
+      masterGain.connect(audioContext.destination);
     }
 
     await audioContext.resume();
 
-    playing = true;
+    clearTimeout(timer);
     step = 0;
-    nextTime = audioContext.currentTime + 0.05;
+    playing = true;
 
     button.textContent = "♫ BGM ON";
     button.setAttribute("aria-pressed", "true");
