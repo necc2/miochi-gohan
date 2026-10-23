@@ -443,7 +443,7 @@ function renderChoices() {
 function feed(index) {
   if (feeding || state.meter >= 100) {
     if (state.meter >= 100) {
-      setMessage("「もうたべられないよ〜」", "ちょっと休憩させてね。", "grumpy");
+      setMessage("「もうたべられないよ〜」", "ちょっと休憩させてね。", "annoyed");
     }
     return;
   }
@@ -464,7 +464,7 @@ function feed(index) {
     setMessage("「これ、だいすき！」", food.name + "をもぐもぐ！うれしそう！", "happy");
   } else {
     state.affection = Math.max(0, state.affection - 1);
-    setMessage("「うーん……」", food.name + "はちょっと苦手みたい……", "grumpy");
+    setMessage("「うーん……」", food.name + "はちょっと苦手みたい……", "annoyed");
   }
 
   if (before < 21 && state.meter >= 21 && food.like) {
