@@ -548,10 +548,13 @@ function shuffleChoices() {
   renderChoices();
 }
 
+
 function renderChoices() {
   document.getElementById("food-grid").innerHTML = choices.map((food, index) =>
     `<button class="food" onclick="feed(${index})" ${feeding || state.meter >= 100 ? "disabled" : ""}>
-      <span class="food-icon">${food.icon}</span>
+      <span class="food-icon">
+        <img src="${food.image}" alt="${food.name}" style="width:64px;height:64px;object-fit:contain;">
+      </span>
       <span class="food-name">${food.name}</span>
     </button>`
   ).join("");
