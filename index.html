@@ -616,6 +616,32 @@ function renderChoices() {
   ).join("");
 }
 
+  
+function showFavoriteEffect() {
+  const effect = document.createElement("div");
+  effect.className = "favorite-effect";
+
+  const particles = ["💗", "💕", "✨", "💖", "⭐", "✧", "♡"];
+
+  for (let i = 0; i < 24; i++) {
+    const particle = document.createElement("span");
+    particle.className = "favorite-particle";
+    particle.textContent =
+      particles[Math.floor(Math.random() * particles.length)];
+
+    particle.style.setProperty("--x", Math.random() * 90 + 5 + "%");
+    particle.style.setProperty("--y", Math.random() * 65 + 20 + "%");
+    particle.style.setProperty("--size", 16 + Math.random() * 18 + "px");
+    particle.style.setProperty("--move", (Math.random() * 100 - 50) + "px");
+    particle.style.setProperty("--delay", Math.random() * 0.35 + "s");
+
+    effect.appendChild(particle);
+  }
+
+  document.body.appendChild(effect);
+  setTimeout(() => effect.remove(), 2400);
+}
+
 
 function feed(index) {
   if (feeding || state.meter >= 100) {
