@@ -228,10 +228,14 @@ h2 {
 .food-name { font-size: 12px; font-weight: bold; overflow-wrap: anywhere; }
 .subtext { text-align: center; font-size: 11px; margin: 9px 0 2px; }
 .menu {
-  display: grid;
+  display: none;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 5px;
   margin-top: 10px;
+}
+
+.menu.open {
+  display: grid;
 }
 .menu button {
   color: white;
