@@ -462,6 +462,30 @@ body {
   bottom: auto;
   z-index: 1000;
 }
+  .menu-container {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.menu-container .menu-toggle {
+  position: static;
+}
+
+.menu-container .menu {
+  width: 180px;
+  margin-top: 6px;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.menu-container .menu.open {
+  display: grid;
+}
 </style>
 </head>
 <body>
