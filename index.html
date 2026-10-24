@@ -639,17 +639,25 @@ function feed(index) {
 }
 
 
+
 function renderBook() {
   document.getElementById("book-description").textContent =
     "発見した食べ物：" + state.seen.length + " / " + foods.length;
+
   document.getElementById("book-grid").innerHTML = foods.map(food => {
     const found = state.seen.includes(food.name);
+
     return `<div class="book-entry ${found ? "" : "unknown"}">
-      <span class="book-icon">${found ? food.icon : "❔"}</span>
+      <span class="book-icon">
+        ${found
+          ? `<img src="${food.image}" alt="${food.name}" style="width:48px;height:48px;object-fit:contain;">`
+          : "❔"}
+      </span>
       ${found ? food.name : "？？？"}
     </div>`;
   }).join("");
 }
+
 
 function showScreen(screen) {
   const book = screen === "book";
