@@ -423,6 +423,34 @@ body {
   }
 }
 
+/* 食べる一覧：大好物のカードだけ豪華に */
+#food-grid .food:has(img[src*="shortcake.png"]),
+#food-grid .food:has(img[src*="pudding.png"]) {
+  border: 2px solid #f3bf55;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fff0f7, #fff9e8, #ffe0ee);
+  box-shadow:
+    0 0 0 2px rgba(255, 190, 220, 0.7),
+    0 0 14px rgba(255, 190, 90, 0.55),
+    inset 0 0 12px rgba(255, 255, 255, 0.9);
+  animation: favorite-card-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes favorite-card-glow {
+  from {
+    box-shadow:
+      0 0 0 2px rgba(255, 190, 220, 0.55),
+      0 0 8px rgba(255, 190, 90, 0.35),
+      inset 0 0 12px rgba(255, 255, 255, 0.9);
+  }
+  to {
+    box-shadow:
+      0 0 0 3px rgba(255, 190, 220, 0.9),
+      0 0 18px rgba(255, 190, 90, 0.75),
+      inset 0 0 16px rgba(255, 255, 255, 1);
+  }
+}
+  
 </style>
 </head>
 <body>
