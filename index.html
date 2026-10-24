@@ -651,9 +651,15 @@ function feed(index) {
     return;
   }
 
-  const food = choices[index];
-  if (!food) return;
-  feeding = true;
+  
+const food = choices[index];
+if (!food) return;
+feeding = true;
+
+if (food.preference === "love") {
+  showFavoriteEffect();
+}
+
 
   const firstTime = !state.seen.includes(food.name);
   if (firstTime) state.seen.push(food.name);
