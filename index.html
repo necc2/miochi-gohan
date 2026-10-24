@@ -814,13 +814,18 @@ function renderBook() {
   }).join("");
 }
 
-
 function showScreen(screen) {
   const book = screen === "book";
+  const game = document.querySelector(".game");
+
+  game.classList.toggle("book-screen", book);
+
   document.getElementById("book-area").style.display = book ? "block" : "none";
   document.getElementById("feed-area").style.display = book ? "none" : "block";
+
   if (book) renderBook();
 }
+
 
 function resetGame() {
   if (!confirm("好感度と図鑑の記録を消して最初から遊びますか？")) return;
