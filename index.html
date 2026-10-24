@@ -442,20 +442,39 @@ body {
 </main>
 
 <script>
+
 const foods = [
-  {name:"ごはん",icon:"🍚",gain:5,like:true},
-  {name:"お肉",icon:"🥩",gain:8,like:true},
-  {name:"ケーキ",icon:"🍰",gain:18,like:true},
-  {name:"にんじん",icon:"🥕",gain:2,like:false},
-  {name:"いちご",icon:"🍓",gain:10,like:true},
-  {name:"パン",icon:"🍞",gain:1,like:true},
-  {name:"おさかな",icon:"🐟",gain:4,like:false},
-  {name:"プリン",icon:"🍮",gain:9,like:true},
-  {name:"ブロッコリー",icon:"🥦",gain:3,like:false},
-  {name:"おにぎり",icon:"🍙",gain:7,like:true},
-  {name:"クッキー",icon:"🍪",gain:13,like:true},
-  {name:"ピーマン",icon:"🫑",gain:1,like:false}
+  // ✨ 大好き：出現率 各1%
+  {name:"ショートケーキ", image:"shortcake.png", gain:12, preference:"love", probability:1},
+  {name:"プリン", image:"pudding.png", gain:10, preference:"love", probability:1},
+
+  // ❤️ 好き：出現率 各3%
+  {name:"チーズ", image:"cheese.png", gain:8, preference:"like", probability:3},
+  {name:"たこ焼き", image:"takoyaki.png", gain:8, preference:"like", probability:3},
+  {name:"カレーライス", image:"curry_rice.png", gain:10, preference:"like", probability:3},
+  {name:"スイカ", image:"watermelon.png", gain:6, preference:"like", probability:3},
+  {name:"うどん", image:"udon.png", gain:9, preference:"like", probability:3},
+  {name:"親子丼", image:"oyakodon.png", gain:10, preference:"like", probability:3},
+  {name:"とろろご飯", image:"tororo_rice.png", gain:8, preference:"like", probability:3},
+  {name:"目玉焼き", image:"fried_egg.png", gain:7, preference:"like", probability:3},
+
+  // 🙂 普通：出現率 合計65%
+  {name:"おにぎり", image:"onigiri.png", gain:7, preference:"normal", probability:7},
+  {name:"りんご", image:"apple.png", gain:5, preference:"normal", probability:7},
+  {name:"バナナ", image:"banana.png", gain:5, preference:"normal", probability:7},
+  {name:"ハンバーガー", image:"hamburger.png", gain:10, preference:"normal", probability:7},
+  {name:"トマト", image:"tomato.png", gain:4, preference:"normal", probability:7},
+  {name:"ドーナツ", image:"donut.png", gain:7, preference:"normal", probability:7},
+  {name:"お寿司", image:"sushi.png", gain:8, preference:"normal", probability:7},
+  {name:"ピザ", image:"pizza.png", gain:9, preference:"normal", probability:8},
+  {name:"ソフトクリーム", image:"soft_serve.png", gain:6, preference:"normal", probability:8},
+
+  // 💦 嫌い：出現率 各3%
+  {name:"にんじん", image:"carrot.png", gain:3, preference:"dislike", probability:3},
+  {name:"きのこ", image:"mushroom.png", gain:3, preference:"dislike", probability:3},
+  {name:"わさび", image:"wasabi.png", gain:1, preference:"dislike", probability:3}
 ];
+
 
 const defaultState = {
   meter:25,
