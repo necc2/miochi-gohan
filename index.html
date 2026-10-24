@@ -560,6 +560,7 @@ function renderChoices() {
   ).join("");
 }
 
+
 function feed(index) {
   if (feeding || state.meter >= 100) {
     if (state.meter >= 100) {
@@ -578,18 +579,33 @@ function feed(index) {
   const before = state.meter;
   state.meter = Math.min(100, state.meter + food.gain);
 
-  if (food.like) {
-    state.affection += 2;
-    if (firstTime) state.affection += 1;
-    setMessage("「これ、だいすき！」", food.name + "をもぐもぐ！うれしそう！", "happy");
+  const affectionGain = {
+    love: 5,
+    like: 3,
+    normal: 1,
+    dislike: -2
+  };
+
+  const gain = affectionGain[food.preference] ?? 1;
+  state.affection = Math.max(
+    0,
+    state.affection + gain + (firstTime && gain > 0 ? 1 : 0)
+  );
+
+  if (food.preference === "love") {
+    setMessage("「だいだいだいすき！」", food.name + "をもぐもぐ！キラキラうれしそう！✨", "happy");
+  } else if (food.preference === "like") {
+    setMessage("「これ、すき！」", food.name + "をもぐもぐ！うれしそう！", "happy");
+  } else if (food.preference === "normal") {
+    setMessage("「もぐもぐ……」", food.name + "をおいしく食べているよ！", "normal");
   } else {
-    state.affection = Math.max(0, state.affection - 1);
     setMessage("「うーん……」", food.name + "はちょっと苦手みたい……", "annoyed");
   }
 
-  if (before < 21 && state.meter >= 21 && food.like) {
+  if (before < 21 && state.meter >= 21 && gain > 0) {
     document.getElementById("speech").textContent = "おなかが満たされてきたよ！ありがとう♡";
   }
+
   if (state.meter >= 100) {
     document.getElementById("scene-label").textContent = "「もうおなかいっぱい！」";
     document.getElementById("speech").textContent = "ごちそうさま！少し休憩しよう。";
@@ -606,6 +622,7 @@ function feed(index) {
     shuffleChoices();
   }, 900);
 }
+
 
 function renderBook() {
   document.getElementById("book-description").textContent =
