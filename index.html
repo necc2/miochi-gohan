@@ -246,6 +246,18 @@ h2 {
 }
 .menu button:active { background: #6552b7; }
 #book-area { display: none; }
+  /* 図鑑画面ではごはん画面の要素を隠す */
+.game.book-screen > .title,
+.game.book-screen > #scene,
+.game.book-screen > .panel:not(#book-area),
+.game.book-screen > .menu-container {
+  display: none !important;
+}
+
+/* 図鑑画面を広く表示 */
+.game.book-screen > #book-area {
+  display: block !important;
+}
 .book-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
