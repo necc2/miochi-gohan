@@ -502,11 +502,17 @@ body {
     <button class="action" onclick="showScreen('feed')">◀ ごはんに戻る</button>
   </section>
 
-  <nav class="menu">
-    <button onclick="showScreen('feed')">◀ ごはん</button>
-    <button onclick="showScreen('book')">▤ 図鑑</button>
-    <button onclick="resetGame()">↻ リセット</button>
-  </nav>
+  
+<button id="menu-toggle" class="menu-toggle" type="button"
+  aria-expanded="false" aria-controls="game-menu"
+  onclick="toggleMenu()">☰ メニュー</button>
+
+<nav class="menu" id="game-menu">
+  <button onclick="showScreen('feed'); closeMenu()">◀ ごはん</button>
+  <button onclick="showScreen('book'); closeMenu()">▤ 図鑑</button>
+  <button onclick="resetGame()">↻ リセット</button>
+</nav>
+
   <footer>♡ みおちを大切にお世話してね ♡</footer>
 </main>
 
