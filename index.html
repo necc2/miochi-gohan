@@ -538,15 +538,30 @@ function setMessage(title, message, face="normal") {
   setFace(face);
 }
 
+
 function shuffleChoices() {
   const pool = [...foods];
   choices = [];
+
   while (choices.length < 3 && pool.length) {
-    const index = Math.floor(Math.random() * pool.length);
-    choices.push(pool.splice(index, 1)[0]);
+    const total = pool.reduce((sum, food) => sum + food.probability, 0);
+    let roll = Math.random() * total;
+    let selectedIndex = 0;
+
+    for (let i = 0; i < pool.length; i++) {
+      roll -= pool[i].probability;
+      if (roll < 0) {
+        selectedIndex = i;
+        break;
+      }
+    }
+
+    choices.push(pool.splice(selectedIndex, 1)[0]);
   }
+
   renderChoices();
 }
+
 
 
 function renderChoices() {
