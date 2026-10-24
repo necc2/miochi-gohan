@@ -382,6 +382,47 @@ body {
   background: var(--purple);
   color: white;
 }
+  
+/* 大好物のキラキラ＆ハート演出 */
+.favorite-effect {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.favorite-particle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  font-size: var(--size);
+  opacity: 0;
+  animation: favorite-float 1.8s ease-out forwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes favorite-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 12px) scale(0.5) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--move)), -100px)
+      scale(1.2) rotate(25deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .favorite-particle {
+    animation-duration: 0.8s;
+  }
+}
+
 </style>
 </head>
 <body>
