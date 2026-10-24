@@ -508,6 +508,18 @@ body {
   </button>
 </header>
 
+  <div class="menu-container">
+  <button id="menu-toggle" class="menu-toggle" type="button"
+    aria-expanded="false" aria-controls="game-menu"
+    onclick="toggleMenu()">☰ メニュー</button>
+
+  <nav class="menu" id="game-menu">
+    <button onclick="showScreen('feed'); closeMenu()">◀ ごはん</button>
+    <button onclick="showScreen('book'); closeMenu()">▤ 図鑑</button>
+    <button onclick="resetGame()">↻ リセット</button>
+  </nav>
+</div>
+
   <section class="panel scene" id="scene">
     <div class="scene-label" id="scene-label">「おなかすいたなぁ……」</div>
     <div class="character" id="character" aria-label="うさ耳の女の子">
@@ -545,18 +557,6 @@ body {
     <div class="book-grid" id="book-grid"></div>
     <button class="action" onclick="showScreen('feed')">◀ ごはんに戻る</button>
   </section>
-
-  <div class="menu-container">
-  <button id="menu-toggle" class="menu-toggle" type="button"
-    aria-expanded="false" aria-controls="game-menu"
-    onclick="toggleMenu()">☰ メニュー</button>
-
-  <nav class="menu" id="game-menu">
-    <button onclick="showScreen('feed'); closeMenu()">◀ ごはん</button>
-    <button onclick="showScreen('book'); closeMenu()">▤ 図鑑</button>
-    <button onclick="resetGame()">↻ リセット</button>
-  </nav>
-</div>
 
 
   <footer>♡ みおちを大切にお世話してね ♡</footer>
